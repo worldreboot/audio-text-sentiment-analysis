@@ -1,15 +1,49 @@
+import sklearn
+import matplotlib.pyplot as plt
+import librosa
+import scipy.io.wavfile as sp
+import scipy.fft as fourier
+import os
+import numpy as np
 from numpy import mean
 from numpy import std
 from sklearn.datasets import make_classification
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.linear_model import LogisticRegression
-import matplotlib.pyplot as plt
-# import librosa
-import scipy.io.wavfile as sp
-import scipy.fft as fourier
-import os
-import numpy as np
+
+
+
+def load_train_data(directory):
+    data = []
+    for filename in os.listdir(directory):
+        row = []
+        rate, audio = sp.read(filename)
+        # gets rid of silent start and end sections of files
+        # plus gets absolute value of amplitute (what matters for loudness)
+        audio = np.abs(np.trim_zeros(audio))
+        # amplitute (loudness) of speaker
+        minamp = min(audio)
+        maxamp = max(audio)
+        row.append(maxamp - minamp)
+        # the fourier transform
+        freqamp = np.abs(fourier.rfft(audio))
+        #frequency bins
+        frequencies = fourier.rfftfreq(len(audio),  1/rate)
+        amp = freqamp / sum(freqamp)
+        mean = sum(frequencies * amp)
+        row.append(mean)
+        # most promenent frequency
+        row.append(np.argmax(freqamp))
+
+
+        data.append(row)
+    data = np.array(data)
+    return data
+
+
+
+
 
 
 def trim_and_abs(arr):
@@ -28,7 +62,6 @@ def trim_and_abs(arr):
 
 def spectral_properties(y: np.ndarray, fs: int):
     arr = []
-
     spec = np.abs(np.fft.rfft(y))
     freq = np.fft.rfftfreq(len(y), d=1 / fs)
     spec = np.abs(spec)
@@ -100,7 +133,6 @@ def load_train_data(dir):
 
 path = 'datasets/archive/audio_speech_actors_01-24'
 X, y = load_train_data(path)
-
 
 model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
 # define the model evaluation procedure
