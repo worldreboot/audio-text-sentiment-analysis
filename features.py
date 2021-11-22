@@ -12,40 +12,6 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import RepeatedStratifiedKFold
 from sklearn.linear_model import LogisticRegression
 
-
-
-def load_train_data(directory):
-    data = []
-    for filename in os.listdir(directory):
-        row = []
-        rate, audio = sp.read(filename)
-        # gets rid of silent start and end sections of files
-        # plus gets absolute value of amplitute (what matters for loudness)
-        audio = np.abs(np.trim_zeros(audio))
-        # amplitute (loudness) of speaker
-        minamp = min(audio)
-        maxamp = max(audio)
-        row.append(maxamp - minamp)
-        # the fourier transform
-        freqamp = np.abs(fourier.rfft(audio))
-        #frequency bins
-        frequencies = fourier.rfftfreq(len(audio),  1/rate)
-        amp = freqamp / sum(freqamp)
-        mean = sum(frequencies * amp)
-        row.append(mean)
-        # most promenent frequency
-        row.append(np.argmax(freqamp))
-
-
-        data.append(row)
-    data = np.array(data)
-    return data
-
-
-
-
-
-
 def trim_and_abs(arr):
     index = 0
     while index < len(arr) and arr[index] == 0:
@@ -89,7 +55,9 @@ def spectral_properties(y: np.ndarray, fs: int):
     arr.append(kurt)
     return arr
 
-
+def shift_pitch(soundFile, shift):
+    audio, sr = soundFile
+    return librosa.effects.pitch_shift(audio, sr, shift)
 
 
 def load_train_data(dir):
@@ -102,27 +70,31 @@ def load_train_data(dir):
             row = []
             file = dir + "/" + directory + "/" + filename
 
-            rate, audio = sp.read(file)
+            audio, rate = sp.read(file)
 
             # some files are mono and some are stereo for some reason
             if len(audio.shape) > 1:
                 if audio.shape[1] == 2:
                     audio = audio[:, 0]
-            row = spectral_properties(audio, rate)
+
+            i = 0.5
+            while i < 8:
+                row.append(shift_pitch((aduio, rate), i))
+            #row = spectral_properties(audio, rate)
             # gets rid of silent start and end sections of files
             # plus gets absolute value of amplitute (what matters for loudness)
-            audio = trim_and_abs(audio)
+            #audio = trim_and_abs(audio)
             # amplitute (loudness) of speaker
-            minamp = min(audio)
-            maxamp = max(audio)
-            row.append(maxamp - minamp)
+            # minamp = min(audio)
+           # maxamp = max(audio)
+            #row.append(maxamp - minamp)
             # the fourier transform
-            freqamp = np.abs(fourier.rfft(audio))
+           # freqamp = np.abs(fourier.rfft(audio))
             #frequency bins
-
             # most promenent frequency
-            row.append(np.argmax(freqamp))
-            y.append(emotion)
+            #row.append(np.argmax(freqamp))
+           # y.append(emotion)
+
             data.append(row)
     data = np.array(data)
     y = np.array(y)
@@ -131,15 +103,15 @@ def load_train_data(dir):
 
 
 
-path = 'datasets/archive/audio_speech_actors_01-24'
-X, y = load_train_data(path)
-
-model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
-# define the model evaluation procedure
-cv = RepeatedStratifiedKFold()
-# evaluate the model and collect the scores
-n_scores = cross_val_score(model, X, y, scoring='accuracy', cv=cv, n_jobs=-1)
-# report the model performance
-
-# 23
-print('Mean Accuracy: %.3f (%.3f)' % (mean(n_scores), std(n_scores)))
+# path = 'datasets/archive/audio_speech_actors_01-24'
+# X, y = load_train_data(path)
+#
+# model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
+# # define the model evaluation procedure
+# cv = RepeatedStratifiedKFold()
+# # evaluate the model and collect the scores
+# n_scores = cross_val_score(model, X, y, scoring='accuracy', cv=cv, n_jobs=-1)
+# # report the model performance
+#
+# # 23
+# print('Mean Accuracy: %.3f (%.3f)' % (mean(n_scores), std(n_scores)))
