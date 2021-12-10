@@ -1,8 +1,6 @@
-import googletrans
 import nlpaug.augmenter.word as naw
 import nlpaug
 from nlpaug.util import Action
-from googletrans import Translator
 
 
 def back_translate(data, to_lang):
