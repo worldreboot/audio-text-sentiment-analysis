@@ -194,9 +194,13 @@ def text_clean(data, labels):
     new_labels = []
     i = 0
     if len(data) != len(labels):
-        while len(data) != len(labels):
+        print(len(data), len(labels))
+        while len(data) > len(new_labels):
+            print(len(data), len(new_labels))
             new_labels.extend(labels)
-        labels = new_labels
+        labels = new_labels[:len(data)]
+
+    assert len(data) == len(labels)
     while i + 1 < len(data):
         item = data[i]
         if item in data[i + 1:]:
