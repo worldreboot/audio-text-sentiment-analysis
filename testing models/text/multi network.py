@@ -8,7 +8,6 @@ import numpy as np
 import re
 import nltk
 from nltk.corpus import stopwords
-import seaborn as sns
 
 from numpy import array
 from keras.preprocessing.text import one_hot

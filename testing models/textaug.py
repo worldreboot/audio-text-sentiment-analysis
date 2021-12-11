@@ -184,9 +184,28 @@ def nested_augment(data: list, labels: list):
     return data, labels
 
 
+def text_clean(data, labels):
+    """
+    slow but necessary
+    :param data:
+    :param labels:
+    :return: nothing
+    """
+    new_labels = []
+    i = 0
+    if len(data) != len(labels):
+        while len(data) != len(labels):
+            new_labels.extend(labels)
+        labels = new_labels
+    while i + 1 < len(data):
+        item = data[i]
+        if item in data[i + 1:]:
+            del(data[i])
+            del(labels[i])
+            i -= 1
+        i += 1
 
-
-
+    return data, labels
 
 
 
