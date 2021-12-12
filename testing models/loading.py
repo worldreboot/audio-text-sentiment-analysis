@@ -60,17 +60,42 @@ def load_data_normal():
     newInput = [sentence.lower() for sentence in textInput]
     return newInput, labelInput
 
+
 def load_data_binary():
     newInput, labelInput = load_data_normal()
     labels = [1 if labelInput[i] > 0 else 0 for i in range(len(labelInput))]
 
     return newInput, labels
 
+
 def load_data_7():
     newInput, labelInput = load_data_normal()
-    labels = [ round(labelInput[i]) for i in range(len(labelInput))]
+    labels = [round(labelInput[i]) for i in range(len(labelInput))]
 
     return newInput, labels
+
+
+def load_data_from_categories(categories: list, data: list, labels: list):
+    """
+    assumed that data and labels are the same length
+    and will be performed only after "set_up_data" is used
+
+    :param categories:  list, length 2
+    :param data: data to be sorted
+    :param labels: labels correspoinding to data
+    :return: sorted data with corresponding labels
+    """
+    #newInput, labelInput = load_data_7()
+    data2 = []
+    labels2 = []
+    i = 0
+    for i in range(len(data)):
+        if labels[i] in categories:
+            data2.append(data[i])
+            labels2.append(labels[i])
+    labels2 = [0 if item == categories[0] else 1 for item in labels2]
+
+    return np.array(data2), np.array(labels2)
 
 
 
