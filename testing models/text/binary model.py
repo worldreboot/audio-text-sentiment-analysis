@@ -19,7 +19,7 @@ assert len(inputs) == len(labels)
 labels2 = labels[:]
 data = np.loadtxt('simple_swap_augdata.txt', delimiter='\n', dtype=str)[2199:]
 print('done')
-data, labels2 = textaug.text_clean(data.tolist(), labels2)
+data, labels2 = textaug.remove_duplicates(data.tolist(), labels2)
 print(len(data))
 
 data = np.array(data)
@@ -54,10 +54,16 @@ for sen in sentences:
 test_data = []
 for sen in inputs:
     test_data.append(preprocess_text(sen))
+    
+textaug.clean_test_train_data(X, test_data, labels)
+
 test_data = np.array(test_data)
 labels = np.array(labels)
 
 y = labels2
+
+
+
 X = np.array(X)
 inputs = np.array(inputs)
 labels = np.array(labels)
@@ -110,7 +116,7 @@ model = Sequential()
 embedding_layer = Embedding(vocab_size, 100, weights=[embedding_matrix], input_length=maxlen, trainable=False)
 model.add(embedding_layer)
 # model.add(Conv1D(filters=128, kernel_size=5, activation='relu'))
-model.add(LSTM(128, return_sequences=True))
+model.add(LSTM(512, return_sequences=True))
 # model.add(MaxPooling1D(pool_size=2))
 # model.add(Flatten())
 # model.add(Dense(1, activation='sigmoid'))
@@ -118,11 +124,11 @@ model.add(LSTM(128, return_sequences=True))
 # model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
 # model.add(TimeDistributed(Flatten()))
 # define LSTM model
-model.add(LSTM(128))
+model.add(LSTM(512))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc'])
 history = model.fit(X_train, y_train, batch_size=512, epochs=6, verbose=1, validation_split=0.2)
-model.save('binary simple swap - LSTM-128.h5')
+model.save('binary simple swap - LSTM-512.h5')
 score = model.evaluate(test_data, labels, verbose=1)
 print("Test Score:", score[0])
 print("Test Accuracy:", score[1])

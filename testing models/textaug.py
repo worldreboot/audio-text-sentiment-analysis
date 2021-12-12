@@ -85,6 +85,30 @@ def delete(data, max_del):
         print('deleted')
     return augmented
 
+def proper_simple_augment(data: list, labels: list):
+    """
+    same as simple_augment but I remember how lists work 😃
+    :param data:
+    :param lables:
+    :return:
+    """
+    return_data = []
+    return_labels = []
+
+    return_data.extend(back_translate(data, 'de'))  # german
+    print('done')
+    return_labels.extend(labels)
+    return_data.extend(back_translate(data, 'fr'))  # french
+    print('done')
+    return_labels.extend(labels)
+
+    return_data.extend(embedding_augmentor(data, 'insert'))
+    print('done')
+    return_labels.extend(labels)
+    return_data.extend(embedding_augmentor(data, 'substitute'))
+    print('done')
+    return_labels.extend(labels)
+
 
 def simple_augment(data: list, labels: list):
     temp = data
@@ -184,7 +208,7 @@ def nested_augment(data: list, labels: list):
     return data, labels
 
 
-def text_clean(data, labels):
+def remove_duplicates(data, labels):
     """
     slow but necessary
     :param data:
@@ -194,9 +218,9 @@ def text_clean(data, labels):
     new_labels = []
     i = 0
     if len(data) != len(labels):
-        print(len(data), len(labels))
+        #print(len(data), len(labels))
         while len(data) > len(new_labels):
-            print(len(data), len(new_labels))
+           # print(len(data), len(new_labels))
             new_labels.extend(labels)
         labels = new_labels[:len(data)]
 
@@ -211,5 +235,13 @@ def text_clean(data, labels):
 
     return data, labels
 
-
+def clean_test_train_data(data: list, test: list, labels: list):
+    for item in test:
+        i = 0
+        while i < len(data):
+            if item == data[i]:
+                del(data[i])
+                del(labels[i])
+                i -= 1
+            i += 1
 
