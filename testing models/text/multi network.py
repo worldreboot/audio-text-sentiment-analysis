@@ -22,7 +22,7 @@ from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 
 
-inputs, labels = loading.load_data()
+inputs, labels = loading.load_data_binary()
 temp_input, temp_lab = inputs, labels
 print('done loading')
 

@@ -16,7 +16,7 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 from sklearn.model_selection import train_test_split
 
-def load_data():
+def load_data_normal():
     mydictLabels = {
         'myfeaturesLabels': '../../cmumosi/CMU_MOSI_Opinion_Labels.csd'}
     # cmumosi_highlevel=mmdatasdk.mmdataset(mmdatasdk.cmu_mosi.highlevel['glove_vectors'],'cmumosi/')
@@ -57,11 +57,21 @@ def load_data():
                 textInput[segmentCounter] = text[segment]
                 segmentCounter += 1
 
-
     newInput = [sentence.lower() for sentence in textInput]
+    return newInput, labelInput
+
+def load_data_binary():
+    newInput, labelInput = load_data_normal()
     labels = [1 if labelInput[i] > 0 else 0 for i in range(len(labelInput))]
 
     return newInput, labels
+
+def load_data_7():
+    newInput, labelInput = load_data_normal()
+    labels = [ round(labelInput[i]) for i in range(len(labelInput))]
+
+    return newInput, labels
+
 
 
 def preprocess_text(sen):
@@ -76,7 +86,9 @@ def preprocess_text(sen):
 
     return sentence
 
+
 TAG_RE = re.compile(r'<[^>]+>')
+
 
 def set_up_data(data: ndarray, inputs: list, labels: list):
     labels2 = labels[:]
@@ -105,9 +117,10 @@ def set_up_data(data: ndarray, inputs: list, labels: list):
 
     assert len(X) == len(y)
     assert len(inputs) == len(labels)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.01, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.01,
+                                                        random_state=42)
 
-    #_, test_data, _2, test_labels = train_test_split(inputs, labels, test_size=0.99, random_state=42)
+    # _, test_data, _2, test_labels = train_test_split(inputs, labels, test_size=0.99, random_state=42)
     # assert len(test_data) == len(test_labels)
     # print(test_data)
     # print(test_labels)
@@ -135,7 +148,7 @@ def set_up_data(data: ndarray, inputs: list, labels: list):
         records = line.split()
         word = records[0]
         vector_dimensions = np.asarray(records[1:], dtype='float32')
-        if vector_dimensions.shape == (100, ):
+        if vector_dimensions.shape == (100,):
             embeddings_dictionary[word] = vector_dimensions
     glove_file.close()
 
@@ -143,9 +156,10 @@ def set_up_data(data: ndarray, inputs: list, labels: list):
     for word, index in tokenizer.word_index.items():
         embedding_vector = embeddings_dictionary.get(word)
         if embedding_vector is not None:
-            if embedding_vector.shape != (100, ):
+            if embedding_vector.shape != (100,):
                 print(embedding_vector.shape)
-            assert embedding_vector.shape == (100, )
+            assert embedding_vector.shape == (100,)
             embedding_matrix[index] = embedding_vector
 
-    return X_train, np.array(y_train), test_data, labels, embedding_matrix, vocab_size, maxlen
+    return X_train, np.array(
+        y_train), test_data, labels, embedding_matrix, vocab_size, maxlen

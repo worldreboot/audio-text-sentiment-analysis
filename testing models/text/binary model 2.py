@@ -14,7 +14,7 @@ from sklearn.model_selection import train_test_split
 
 import textaug
 
-inputs, labels = loading.load_data()
+inputs, labels = loading.load_data_binary()
 assert len(inputs) == len(labels)
 #labels2 = labels[:]
 #data = np.loadtxt('simple_swap_augdata.txt', delimiter='\n', dtype=str)[2199:]
