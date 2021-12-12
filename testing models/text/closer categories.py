@@ -24,10 +24,10 @@ print('done')
 
 
 X_train, y_train, test_data, labels, embedding_matrix, \
-    vocab_size, maxlen = loading.set_up_data(data, inputs, labels)
+    vocab_size, maxlen, t = loading.set_up_data(data, inputs, labels)
 
-X_train, y_train = loading.load_data_from_categories([-1, -2], X_train, y_train)
-test_data, labels = loading.load_data_from_categories([-1, -2], test_data, labels)
+X_train, y_train = loading.load_data_from_categories([-3, -1], X_train, y_train)
+test_data, labels = loading.load_data_from_categories([-3, -1], test_data, labels)
 
 print(len(X_train), len(y_train), len(test_data), len(labels))
 
@@ -50,7 +50,7 @@ model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc'])
 history = model.fit(X_train, y_train, batch_size=512, epochs=6, verbose=1,
                     validation_split=0.2)
-model.save('binary simple swap - LSTM-512x2 - (n1,n2) cat.h5')
+model.save('binary simple swap - LSTM-512x2 - (n3,n1) cat.h5')
 score = model.evaluate(test_data, labels, verbose=1)
 print("Test Score:", score[0])
 print("Test Accuracy:", score[1])

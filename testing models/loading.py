@@ -16,6 +16,8 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 from sklearn.model_selection import train_test_split
 
+
+
 def load_data_normal():
     mydictLabels = {
         'myfeaturesLabels': '../../cmumosi/CMU_MOSI_Opinion_Labels.csd'}
@@ -98,8 +100,12 @@ def load_data_from_categories(categories: list, data: list, labels: list):
     return np.array(data2), np.array(labels2)
 
 
-
 def preprocess_text(sen):
+    """
+    taken from https://stackabuse.com/python-for-nlp-movie-sentiment-analysis-using-deep-learning-in-keras/
+    :param sen:
+    :return:
+    """
     # Remove punctuations and numbers
     sentence = re.sub('[^a-zA-Z]', ' ', sen)
 
@@ -116,6 +122,16 @@ TAG_RE = re.compile(r'<[^>]+>')
 
 
 def set_up_data(data: ndarray, inputs: list, labels: list):
+    """
+    tokenization, paddings, and embedding setup steps taken from
+    https://stackabuse.com/python-for-nlp-movie-sentiment-analysis-using-deep-learning-in-keras/
+
+
+    :param data:
+    :param inputs:
+    :param labels:
+    :return:
+    """
     labels2 = labels[:]
     X = []
 
@@ -187,4 +203,8 @@ def set_up_data(data: ndarray, inputs: list, labels: list):
             embedding_matrix[index] = embedding_vector
 
     return X_train, np.array(
-        y_train), test_data, labels, embedding_matrix, vocab_size, maxlen
+        y_train), test_data, labels, embedding_matrix, vocab_size, maxlen, tokenizer
+
+
+
+
