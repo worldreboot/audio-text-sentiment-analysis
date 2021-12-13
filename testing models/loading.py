@@ -121,12 +121,13 @@ def preprocess_text(sen):
 TAG_RE = re.compile(r'<[^>]+>')
 
 
-def set_up_data(data: ndarray, inputs: list, labels: list):
+def set_up_data(data: ndarray, inputs: list, labels: list, pad_test=True):
     """
     tokenization, paddings, and embedding setup steps taken from
     https://stackabuse.com/python-for-nlp-movie-sentiment-analysis-using-deep-learning-in-keras/
 
 
+    :param pad_test:
     :param data:
     :param inputs:
     :param labels:
@@ -171,13 +172,13 @@ def set_up_data(data: ndarray, inputs: list, labels: list):
 
     X_train = tokenizer.texts_to_sequences(X_train)
     X_test = tokenizer.texts_to_sequences(X_test)
-
+    untokenized = test_data[:]
     test_data = tokenizer.texts_to_sequences(test_data)
     # Adding 1 because of reserved 0 index
     vocab_size = len(tokenizer.word_index) + 1
 
     maxlen = 14
-
+    unpadded = test_data[:]
     X_train = pad_sequences(X_train, padding='post', maxlen=maxlen)
     X_test = pad_sequences(X_test, padding='post', maxlen=maxlen)
     test_data = pad_sequences(test_data, padding='post', maxlen=maxlen)
@@ -203,7 +204,7 @@ def set_up_data(data: ndarray, inputs: list, labels: list):
             embedding_matrix[index] = embedding_vector
 
     return X_train, np.array(
-        y_train), test_data, labels, embedding_matrix, vocab_size, maxlen, tokenizer
+        y_train), test_data, labels, embedding_matrix, vocab_size, maxlen, tokenizer, unpadded, untokenized
 
 
 

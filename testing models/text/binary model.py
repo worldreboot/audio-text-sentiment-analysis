@@ -23,8 +23,8 @@ print('done')
 
 
 X_train, y_train, test_data, labels, embedding_matrix, \
-    vocab_size, maxlen, t = loading.set_up_data(data, inputs, labels)
-
+    vocab_size, maxlen, t, unpadded, untokenized = loading.set_up_data(data, inputs, labels)
+print("X_train", X_train.shape, y_train.shape)
 print(type(X_train), type(y_train), type(test_data), type(labels))
 model = Sequential()
 embedding_layer = Embedding(vocab_size, 100, weights=[embedding_matrix],
@@ -42,6 +42,7 @@ model.add(LSTM(512, return_sequences=True))
 model.add(LSTM(512))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=[keras.metrics.BinaryAccuracy(threshold=0.5)])
+print(model.summary())
 history = model.fit(X_train, y_train, batch_size=512, epochs=6, verbose=1,
                     validation_split=0.2)
 model.save('binary simple swap - LSTM-512 -v2.h5')
