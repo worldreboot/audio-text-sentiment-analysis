@@ -2,7 +2,7 @@ import json
 import random
 import re
 # import loading
-import numpy as np
+#import numpy as np
 # from keras.layers import Conv1D, Conv2D, Flatten, LSTM, MaxPooling1D, \
     # MaxPooling2D, TimeDistributed
 # from keras.layers.core import Dense
@@ -16,6 +16,8 @@ import numpy as np
 import os
 import numpy as np
 import pandas as pd
+
+import loading
 from audio import convert_audio_to_log_mel_spectrogram
 import model
 from sklearn.model_selection import train_test_split
@@ -23,7 +25,7 @@ from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import matplotlib.pyplot as plt
 import tensorflow as tf
-import tensorflow_datasets as tfds
+#import tensorflow_datasets as tfds
 import sys
 
 from tensorflow.keras.utils import to_categorical
@@ -112,6 +114,14 @@ emotion_one_hot = to_categorical(lb.fit_transform(emotion))
 combined = [[log_mels[i], emotion_one_hot[i]] for i in range(len(log_mels))]
 
 train, test = train_test_split(combined, test_size=0.2, random_state=0)
+inputs, labels = loading.load_data_binary()
+labels2 = labels[:]
+data = np.loadtxt('simple_swap_augdata.txt', delimiter='\n', dtype=str)[2199:]
+print('done')
+X_train2, y_train2, test_data, labels, embedding_matrix, \
+    vocab_size, maxlen, t, unpadded, untokenized = loading.set_up_data(data, inputs, labels)
+
+test_data, labels = train_test_split(test_data, labels, test_size=0.2, random_state=0)
 
 x_train = [sample[0] for sample in train]
 y_train = [sample[1] for sample in train]
