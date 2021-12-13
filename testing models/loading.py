@@ -20,7 +20,7 @@ from sklearn.model_selection import train_test_split
 
 def load_data_normal():
     mydictLabels = {
-        'myfeaturesLabels': '../../cmumosi/CMU_MOSI_Opinion_Labels.csd'}
+        'myfeaturesLabels': 'C://Users//hallm//Desktop//School//Uni//Ryerson//2nd Year//Fall//CPS803//Project//cmumosi//CMU_MOSI_Opinion_Labels.csd'}
     # cmumosi_highlevel=mmdatasdk.mmdataset(mmdatasdk.cmu_mosi.highlevel['glove_vectors'],'cmumosi/')
     # mydictText = {'myfeaturesText':'cmumosi/CMU_MOSI_TimestampedWordVectors.csd'}
     mydatasetLabels = mmdatasdk.mmdataset(mydictLabels)
@@ -41,7 +41,7 @@ def load_data_normal():
     segmentCounter = 0
     for key in mydatasetLabels.computational_sequences[
         'myfeaturesLabels'].data.keys():
-        textPath = '../../raw/Raw/Transcript/Segmented/%s.annotprocessed' % (
+        textPath = 'C://Users//hallm//Desktop//School//Uni//Ryerson//2nd Year//Fall//CPS803//Project//raw//Raw//Transcript//Segmented//%s.annotprocessed' % (
             key)
         with open(textPath) as file:  # Use file to refer to the file object
             text = file.read()

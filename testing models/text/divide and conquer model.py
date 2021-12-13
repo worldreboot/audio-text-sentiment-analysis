@@ -44,20 +44,6 @@ predicted_labs = []
 for i in range(len(test_data)):
     example = test_data[i]
     example = tf.expand_dims(example, axis=0)
-    #print(example)
-    # example = t.texts_to_sequences(example)
-    # flat_list = []
-    # for sublist in example:
-    #     for item in sublist:
-    #         flat_list.append(item)
-    #
-    # flat_list = [flat_list]
-    #
-    # example = pad_sequences(flat_list, padding='post', maxlen=maxlen)
-    # try:
-    #     assert example.shape == (14,)
-    # except AssertionError:
-    #     print("bad shape", example.shape)
     x = binary_model.predict(example)[0]
     if i == 0:
         print('test 2')
@@ -95,9 +81,9 @@ positive_model_2 = keras.models.load_model("binary simple swap - LSTM-512x2 - (2
 
 
 correctcount = 0
+counter = 0
 for i in range(min(len(positive), len(negative))):
     print(i)
-
     p1 = positive_model_1.predict(positive[i])[0]
     p2 = positive_model_2.predict(positive[i])[0]
     n1 = negative_model_1.predict(negative[i])[0]
