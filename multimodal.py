@@ -90,25 +90,6 @@ print("Finished loading CMU dataset")
 lb = LabelEncoder()
 emotion_one_hot = to_categorical(lb.fit_transform(emotion))
 
-# def gen():
-#     for i in range(len(log_mels)):
-#         yield log_mels[i], emotion_one_hot[i]
-
-# dataset = tf.data.Dataset.from_generator(gen, output_signature=(tf.TensorSpec(shape=(128, None), dtype=tf.float32, name=None), tf.TensorSpec(shape=(7,), dtype=tf.float32)))
-
-# print(dataset)
-# print(dataset.element_spec)
-
-# train_dataset = dataset.take(1650)
-# test_dataset = dataset.skip(1650)
-# batches = train_dataset.padded_batch(8)
-# test_batches = test_dataset.padded_batch(8)
-
-# cnn = model.CNN(0, 1)
-
-# log_mels = np.array(log_mels)
-# log_mels = log_mels[:, :, np.newaxis]
-
 combined = [[log_mels[i], emotion_one_hot[i]] for i in range(len(log_mels))]
 
 train, test = train_test_split(combined, test_size=0.2, random_state=0)
