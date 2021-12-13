@@ -56,9 +56,12 @@ class CNN:
         x = layers.Dense(128 * self.W, activation=layers.LeakyReLU(alpha=0.01))(x)
         # x = layers.LeakyReLU(alpha=0.1)(x)
 
-        outputs = layers.Dense(self.N, activation="sigmoid")(x)
+        outputs = layers.Dense(self.N, activation="softmax")(x)
 
         self.model = keras.Model(inputs, outputs, name='toy_cnn')
+        
+        opt = keras.optimizers.Adam(learning_rate=0.0002)
+        self.model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
         print(self.model.summary())
 
