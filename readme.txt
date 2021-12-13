@@ -3,6 +3,10 @@ You need to download the CMU MOSI dataset in order to run our models.
 You can download it here: http://immortal.multicomp.cs.cmu.edu/raw_datasets/ (CMU_MOSI.zip).
 Extract the contents in datasets/ in a folder called CMU_MOSI
 
+You also need to install the CMU MOSI SDK, which is used to process the CMU MOSI dataset:
+https://github.com/A2Zadeh/CMU-MultimodalSDK
+
+
 # Audio-based part of the project
 In order to train and run our CNN model for audio analysis, you can run
 
